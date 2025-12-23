@@ -10,6 +10,7 @@ export type Props = {
   showInfos?: boolean
   showEstrela?: boolean
   variant?: 'default' | 'categories'
+  onPratoClick?: (prato: Prato) => void
 }
 
 export const ProductsList = ({
@@ -18,7 +19,8 @@ export const ProductsList = ({
   pratos,
   showInfos = true,
   showEstrela = true,
-  variant = 'default'
+  variant = 'default',
+  onPratoClick
 }: Props) => (
   <Container background={background} variant={variant}>
     <div className="container">
@@ -36,6 +38,7 @@ export const ProductsList = ({
             showEstrela={showEstrela}
             variant={variant}
             avaliacao={prato.avaliacao}
+            onClick={() => onPratoClick?.(prato)}
           />
         ))}
       </List>

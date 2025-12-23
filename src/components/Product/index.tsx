@@ -25,6 +25,7 @@ export type Props = {
   showInfos?: boolean
   showEstrela?: boolean
   variant?: 'default' | 'categories'
+  onClick?: () => void
 }
 
 const Product = ({
@@ -35,7 +36,8 @@ const Product = ({
   avaliacao = 0,
   showInfos = true,
   showEstrela = true,
-  variant = 'default'
+  variant = 'default',
+  onClick
 }: Props) => (
   <WrapperProduto>
     {variant !== 'categories' && (
@@ -60,7 +62,15 @@ const Product = ({
       <Descricao variant={variant}>{description}</Descricao>
 
       {variant === 'categories' ? (
-        <ButtonLinkVariant to="">Adicionar ao carrinho</ButtonLinkVariant>
+        <ButtonLinkVariant
+          to=""
+          onClick={(e) => {
+            e.preventDefault()
+            onClick?.()
+          }}
+        >
+          Mais detalhes
+        </ButtonLinkVariant>
       ) : (
         <ButtonLink to="/categories">Saiba mais</ButtonLink>
       )}
