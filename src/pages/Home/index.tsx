@@ -4,7 +4,7 @@ import Prato from '../../models/Pratos'
 import sushi from '../../assets/images/sushi.png'
 import pratos from '../../assets/images/pratos.png'
 import { ButtonLink } from '../../components/Button/styles'
-import { Estrela } from '../../components/Avaliacao/styles'
+
 import Header from '../../components/Header'
 
 const cardapio: Prato[] = [

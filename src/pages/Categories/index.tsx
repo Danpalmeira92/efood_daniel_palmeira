@@ -4,7 +4,6 @@ import { ProductsList } from '../../components/ProductsList'
 import Prato from '../../models/Pratos'
 
 import pizza from '../../assets/images/pizza.png'
-import { ButtonLink } from '../../components/Button/styles'
 
 import Header from '../../components/Header'
 
