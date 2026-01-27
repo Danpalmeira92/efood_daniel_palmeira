@@ -180,7 +180,7 @@ const Categories = () => {
 
             <button>
               {modal.prato?.button} - R${' '}
-              {modal.prato?.preco.toFixed(2).replace('.', ',')}
+              {modal.prato?.preco.toFixed(2).replace('.', ',') ?? '0,00'}
             </button>
           </div>
           <img
