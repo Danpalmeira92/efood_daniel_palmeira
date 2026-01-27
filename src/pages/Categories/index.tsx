@@ -91,6 +91,21 @@ interface ModalState {
   prato?: Prato
 }
 
+interface ApiPrato {
+  id: number
+  nome: string
+  descricao: string
+  foto: string
+  porcao: string
+  preco: number
+}
+
+interface ApiRestaurante {
+  tipo: string
+  avaliacao: number
+  cardapio: ApiPrato[]
+}
+
 const Categories = () => {
   const [modal, setModal] = useState<ModalState>({
     isVisible: false
@@ -107,24 +122,26 @@ const Categories = () => {
   useEffect(() => {
     fetch('https://api-ebac.vercel.app/api/efood/restaurantes')
       .then((res) => res.json())
-      .then((data) => {
-        // pega a pizzaria
-        const pizzaria = data.find((item: any) => item.tipo === 'pizzaria')
+      .then((data: ApiRestaurante[]) => {
+        const pizzaria = data.find((item) => item.tipo === 'pizzaria')
 
-        // pega a pizza marguerita
+        if (!pizzaria) return
+
         const marguerita = pizzaria.cardapio.find(
-          (item: any) => item.nome === 'Pizza Margherita'
+          (item) => item.nome === 'Pizza Margherita'
         )
 
+        if (!marguerita) return
+
         const pratoFormatado = new Prato(
-          marguerita.descricao, // description
-          marguerita.foto, // image
-          [marguerita.porcao], // infos
-          'Adicionar ao carrinho', // button
-          marguerita.nome, // title
-          marguerita.id, // id
-          pizzaria.avaliacao, // avaliacao
-          marguerita.preco //preço
+          marguerita.descricao,
+          marguerita.foto,
+          [marguerita.porcao],
+          'Adicionar ao carrinho',
+          marguerita.nome,
+          marguerita.id,
+          pizzaria.avaliacao,
+          marguerita.preco
         )
 
         setPratoApi(pratoFormatado)
