@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import bgImage from '../../assets/images/fundo.png'
 import bgVariant from '../../assets/images/apresentacao.png'
 import { Props } from '.'
-import { cores } from '../../styles'
 
 export const HeaderBar = styled.header<{ variant?: Props['variant'] }>`
   background-image: url(${bgImage});
