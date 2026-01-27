@@ -1,11 +1,12 @@
 class Prato {
+  id: number
+  title: string
   description: string
   image: string
+  avaliacao: number
   infos: string[]
   button: string
-  title: string
-  id: number
-  avaliacao: number
+  preco: number
 
   constructor(
     description: string,
@@ -14,7 +15,8 @@ class Prato {
     button: string,
     title: string,
     id: number,
-    avaliacao: number
+    avaliacao: number,
+    preco: number
   ) {
     this.description = description
     this.image = image
@@ -23,6 +25,7 @@ class Prato {
     this.title = title
     this.id = id
     this.avaliacao = avaliacao
+    this.preco = preco
   }
 }
 

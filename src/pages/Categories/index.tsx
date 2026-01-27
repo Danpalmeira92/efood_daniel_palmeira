@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ProductsList } from '../../components/ProductsList'
 import Prato from '../../models/Pratos'
@@ -22,7 +22,8 @@ const cardapio: Prato[] = [
     avaliacao: 0,
     infos: [''],
     image: pizza,
-    button: ButtonLink
+    button: 'Adiconar ao carrinho',
+    preco: 0
   },
   {
     id: 2,
@@ -33,7 +34,8 @@ const cardapio: Prato[] = [
     avaliacao: 0,
     infos: [''],
     image: pizza,
-    button: ButtonLink
+    button: 'Adiconar ao carrinho',
+    preco: 0
   },
   {
     id: 3,
@@ -44,7 +46,8 @@ const cardapio: Prato[] = [
     avaliacao: 0,
     infos: [''],
     image: pizza,
-    button: ButtonLink
+    button: 'Adiconar ao carrinho',
+    preco: 0
   },
   {
     id: 4,
@@ -55,7 +58,8 @@ const cardapio: Prato[] = [
     avaliacao: 0,
     infos: [''],
     image: pizza,
-    button: ButtonLink
+    button: 'Adiconar ao carrinho',
+    preco: 0
   },
   {
     id: 5,
@@ -66,7 +70,8 @@ const cardapio: Prato[] = [
     avaliacao: 0,
     infos: [''],
     image: pizza,
-    button: ButtonLink
+    button: 'Adiconar ao carrinho',
+    preco: 0
   },
   {
     id: 6,
@@ -77,7 +82,8 @@ const cardapio: Prato[] = [
     avaliacao: 0,
     infos: [''],
     image: pizza,
-    button: ButtonLink
+    button: 'Adiconar ao carrinho',
+    preco: 0
   }
 ]
 
@@ -97,6 +103,35 @@ const Categories = () => {
     })
   }
 
+  const [pratoApi, setPratoApi] = useState<Prato | null>(null)
+
+  useEffect(() => {
+    fetch('https://api-ebac.vercel.app/api/efood/restaurantes')
+      .then((res) => res.json())
+      .then((data) => {
+        // pega a pizzaria
+        const pizzaria = data.find((item: any) => item.tipo === 'pizzaria')
+
+        // pega a pizza marguerita
+        const marguerita = pizzaria.cardapio.find(
+          (item: any) => item.nome === 'Pizza Margherita'
+        )
+
+        const pratoFormatado = new Prato(
+          marguerita.descricao, // description
+          marguerita.foto, // image
+          [marguerita.porcao], // infos
+          'Adicionar ao carrinho', // button
+          marguerita.nome, // title
+          marguerita.id, // id
+          pizzaria.avaliacao, // avaliacao
+          marguerita.preco //preço
+        )
+
+        setPratoApi(pratoFormatado)
+      })
+  }, [])
+
   return (
     <>
       <Header showTexto={false} variant={'categories'} />
@@ -108,12 +143,14 @@ const Categories = () => {
         showInfos={false}
         showEstrela={false}
         variant={'categories'}
-        onPratoClick={(prato) =>
+        onPratoClick={() => {
+          if (!pratoApi) return
+
           setModal({
             isVisible: true,
-            prato
+            prato: pratoApi
           })
-        }
+        }}
       />
 
       <Modal className={modal.isVisible ? 'visivel' : ''}>
@@ -123,19 +160,12 @@ const Categories = () => {
             <header>
               <h4>{modal.prato?.title}</h4>
             </header>
-            <p>
-              A pizza Margherita é uma pizza clássica da culinária italiana,
-              reconhecida por sua simplicidade e sabor inigualável. Ela é feita
-              com uma base de massa fina e crocante, coberta com molho de tomate
-              fresco, queijo mussarela de alta qualidade, manjericão fresco e
-              azeite de oliva extra-virgem. A combinação de sabores é perfeita,
-              com o molho de tomate suculento e ligeiramente ácido, o queijo
-              derretido e cremoso e as folhas de manjericão frescas, que
-              adicionam um toque de sabor herbáceo. É uma pizza simples, mas
-              deliciosa, que agrada a todos os paladares e é uma ótima opção
-              para qualquer ocasião. Serve: de 2 a 3 pessoas
-            </p>
-            <button>Adicionar ao carrinho - R$ 60,90</button>
+            <p>{modal.prato?.description}</p>
+
+            <button>
+              {modal.prato?.button} - R${' '}
+              {modal.prato?.preco.toFixed(2).replace('.', ',')}
+            </button>
           </div>
           <img
             className="close"

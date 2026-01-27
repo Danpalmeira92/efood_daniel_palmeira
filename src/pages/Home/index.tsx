@@ -16,7 +16,8 @@ const cardapio: Prato[] = [
     avaliacao: 4.9,
     infos: ['Destaque da semana', 'Japonesa'],
     image: sushi,
-    button: ButtonLink
+    button: ButtonLink,
+    preco: 0
   },
   {
     id: 2,
@@ -27,7 +28,8 @@ const cardapio: Prato[] = [
     avaliacao: 4.6,
     infos: ['Italiana'],
     image: pratos,
-    button: ButtonLink
+    button: ButtonLink,
+    preco: 0
   },
   {
     id: 3,
@@ -38,7 +40,8 @@ const cardapio: Prato[] = [
     avaliacao: 4.6,
     infos: ['Italiana'],
     image: pratos,
-    button: ButtonLink
+    button: ButtonLink,
+    preco: 0
   },
   {
     id: 4,
@@ -49,7 +52,8 @@ const cardapio: Prato[] = [
     avaliacao: 4.6,
     infos: ['Italiana'],
     image: pratos,
-    button: ButtonLink
+    button: ButtonLink,
+    preco: 0
   },
   {
     id: 5,
@@ -60,7 +64,8 @@ const cardapio: Prato[] = [
     avaliacao: 4.6,
     infos: ['Italiana'],
     image: pratos,
-    button: ButtonLink
+    button: ButtonLink,
+    preco: 0
   },
   {
     id: 6,
@@ -71,7 +76,8 @@ const cardapio: Prato[] = [
     avaliacao: 4.6,
     infos: ['Italiana'],
     image: pratos,
-    button: ButtonLink
+    button: ButtonLink,
+    preco: 0
   }
 ]
 
