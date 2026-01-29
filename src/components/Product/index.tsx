@@ -69,7 +69,7 @@ const Product = ({
             onClick?.()
           }}
         >
-          Mais detalhes
+          Adicionar ao carrinho
         </ButtonLinkVariant>
       ) : (
         <ButtonLink to="/categories">Saiba mais</ButtonLink>
