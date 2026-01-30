@@ -22,13 +22,14 @@ export const ProductsList = ({
   variant = 'default',
   onPratoClick
 }: Props) => (
-  <Container background={background} variant={variant}>
+  <Container $background={background} $variant={variant}>
     <div className="container">
       <h2>{title}</h2>
-      <List variant={variant}>
+      <List $variant={variant}>
         {pratos.map((prato) => (
           <Product
             key={prato.id}
+            id={prato.id}
             description={prato.description}
             image={prato.image}
             infos={prato.infos}
@@ -36,7 +37,7 @@ export const ProductsList = ({
             button={prato.button}
             showInfos={showInfos}
             showEstrela={showEstrela}
-            variant={variant}
+            $variant={variant}
             avaliacao={prato.avaliacao}
             onClick={() => onPratoClick?.(prato)}
           />

@@ -14,11 +14,20 @@ import logo from '../../assets/images/logo.png'
 export type Props = {
   showTexto?: boolean
   variant?: 'default' | 'categories'
+  tipo?: string
+  titulo?: string
+  capa?: string
 }
 
-const Header = ({ showTexto = true, variant = 'default' }: Props) => (
+const Header = ({
+  showTexto = true,
+  variant = 'default',
+  tipo,
+  titulo,
+  capa
+}: Props) => (
   <>
-    <HeaderBar variant={variant}>
+    <HeaderBar $variant={variant}>
       {variant === 'categories' ? (
         <VariantHeaderTexto>
           <h4>Restaurantes</h4>
@@ -47,10 +56,10 @@ const Header = ({ showTexto = true, variant = 'default' }: Props) => (
     </HeaderBar>
 
     {variant === 'categories' && (
-      <VariantBanner>
+      <VariantBanner $image={capa}>
         <div className="container">
-          <TituloBanner>Italiana</TituloBanner>
-          <TituloRestauranrte>La Dolce Vita Trattoria</TituloRestauranrte>
+          <TituloBanner>{tipo}</TituloBanner>
+          <TituloRestauranrte>{titulo}</TituloRestauranrte>
         </div>
       </VariantBanner>
     )}

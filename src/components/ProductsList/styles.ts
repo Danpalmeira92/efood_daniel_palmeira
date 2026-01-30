@@ -4,10 +4,15 @@ import { Props } from '.'
 import { cores } from '../../styles'
 import { Card } from '../Product/styles'
 
-export const Container = styled.section<Omit<Props, 'title' | 'pratos'>>`
+type ContainerProps = {
+  $background: Props['background']
+  $variant?: Props['variant']
+}
+
+export const Container = styled.section<ContainerProps>`
   padding: 32px 0;
   background-color: ${(props) =>
-    props.background === 'black' ? cores.preto : cores.cinza};
+    props.$background === 'black' ? cores.preto : cores.cinza};
 
   ${Card} {
     background-color: ${cores.cinza};
@@ -15,17 +20,17 @@ export const Container = styled.section<Omit<Props, 'title' | 'pratos'>>`
   }
 
   ${(props) =>
-    props.variant === 'categories' &&
+    props.$variant === 'categories' &&
     `
-    ${Card} {
-    background-color: ${cores.salmon};
-    border: 1px solid;
-    color: ${cores.cinza};
-  }
-  `}
+      ${Card} {
+        background-color: ${cores.salmon};
+        border: 1px solid;
+        color: ${cores.cinza};
+      }
+    `}
 `
 
-export const List = styled.ul<{ variant?: Props['variant'] }>`
+export const List = styled.ul<{ $variant?: Props['variant'] }>`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 48px;
@@ -34,7 +39,7 @@ export const List = styled.ul<{ variant?: Props['variant'] }>`
   margin-bottom: 64px;
 
   ${(props) =>
-    props.variant === 'categories' &&
+    props.$variant === 'categories' &&
     `
       grid-template-columns: repeat(3, 1fr);
       column-gap: 24px;

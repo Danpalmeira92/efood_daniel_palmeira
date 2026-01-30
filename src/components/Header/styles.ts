@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import bgImage from '../../assets/images/fundo.png'
-import bgVariant from '../../assets/images/apresentacao.png'
+
 import { Props } from '.'
 
-export const HeaderBar = styled.header<{ variant?: Props['variant'] }>`
+export const HeaderBar = styled.header<{ $variant?: Props['variant'] }>`
   background-image: url(${bgImage});
   margin-top: 0;
   display: flex;
@@ -14,18 +14,31 @@ export const HeaderBar = styled.header<{ variant?: Props['variant'] }>`
   padding: 24px 0;
 
   ${(props) =>
-    props.variant === 'categories' &&
+    props.$variant === 'categories' &&
     `
       height: 160px;
       `}
 `
 
-export const VariantBanner = styled.div`
+export const VariantBanner = styled.div<{ $image?: string }>`
   width: 100%;
   height: 280px;
-  background-image: url(${bgVariant});
+  background-image: url(${(props) => props.$image});
   background-size: cover;
   background-position: center;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
 `
 
 export const TituloBanner = styled.h2`

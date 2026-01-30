@@ -1,90 +1,15 @@
 import { useEffect, useState } from 'react'
 
+import { useParams } from 'react-router-dom'
+
 import { ProductsList } from '../../components/ProductsList'
 import Prato from '../../models/Pratos'
-
-import pizza from '../../assets/images/pizza.png'
 
 import Header from '../../components/Header'
 
 import { Modal, ModalContent } from '../../components/ProductsList/styles'
 
 import fechar from '../../assets/images/fechar.png'
-
-const cardapio: Prato[] = [
-  {
-    id: 1,
-
-    description:
-      'A clássica Marguerita: molho de tomate suculento, mussarela derretida, manjericão fresco e um toque de azeite. Sabor e simplicidade!',
-    title: 'Pizza Marguerita',
-    avaliacao: 0,
-    infos: [''],
-    image: pizza,
-    button: 'Adiconar ao carrinho',
-    preco: 0
-  },
-  {
-    id: 2,
-
-    description:
-      'A clássica Marguerita: molho de tomate suculento, mussarela derretida, manjericão fresco e um toque de azeite. Sabor e simplicidade!',
-    title: 'Pizza Marguerita',
-    avaliacao: 0,
-    infos: [''],
-    image: pizza,
-    button: 'Adiconar ao carrinho',
-    preco: 0
-  },
-  {
-    id: 3,
-
-    description:
-      'A clássica Marguerita: molho de tomate suculento, mussarela derretida, manjericão fresco e um toque de azeite. Sabor e simplicidade!',
-    title: 'Pizza Marguerita',
-    avaliacao: 0,
-    infos: [''],
-    image: pizza,
-    button: 'Adiconar ao carrinho',
-    preco: 0
-  },
-  {
-    id: 4,
-
-    description:
-      'A clássica Marguerita: molho de tomate suculento, mussarela derretida, manjericão fresco e um toque de azeite. Sabor e simplicidade!',
-    title: 'Pizza Marguerita',
-    avaliacao: 0,
-    infos: [''],
-    image: pizza,
-    button: 'Adiconar ao carrinho',
-    preco: 0
-  },
-  {
-    id: 5,
-
-    description:
-      'A clássica Marguerita: molho de tomate suculento, mussarela derretida, manjericão fresco e um toque de azeite. Sabor e simplicidade!',
-    title: 'Pizza Marguerita',
-    avaliacao: 0,
-    infos: [''],
-    image: pizza,
-    button: 'Adiconar ao carrinho',
-    preco: 0
-  },
-  {
-    id: 6,
-
-    description:
-      'A clássica Marguerita: molho de tomate suculento, mussarela derretida, manjericão fresco e um toque de azeite. Sabor e simplicidade!',
-    title: 'Pizza Marguerita',
-    avaliacao: 0,
-    infos: [''],
-    image: pizza,
-    button: 'Adiconar ao carrinho',
-    preco: 0
-  }
-]
 
 interface ModalState {
   isVisible: boolean
@@ -101,12 +26,17 @@ interface ApiPrato {
 }
 
 interface ApiRestaurante {
+  id: number
+  titulo: string
   tipo: string
   avaliacao: number
+  capa: string
   cardapio: ApiPrato[]
 }
 
 const Categories = () => {
+  const { id } = useParams<{ id: string }>()
+  const [pratos, setPratos] = useState<Prato[]>([])
   const [modal, setModal] = useState<ModalState>({
     isVisible: false
   })
@@ -117,57 +47,66 @@ const Categories = () => {
     })
   }
 
-  const [pratoApi, setPratoApi] = useState<Prato | null>(null)
+  const [tipo, setTipo] = useState('')
+  const [titulo, setTitulo] = useState('')
+  const [capa, setCapa] = useState('')
 
   useEffect(() => {
     fetch('https://api-ebac.vercel.app/api/efood/restaurantes')
       .then((res) => res.json())
       .then((data: ApiRestaurante[]) => {
-        const pizzaria = data.find((item) => item.tipo === 'pizzaria')
+        const restaurante = data.find((item) => item.id === Number(id))
 
-        if (!pizzaria) return
+        if (!restaurante) return
 
-        const marguerita = pizzaria.cardapio.find(
-          (item) => item.nome === 'Pizza Margherita'
+        setTipo(restaurante.tipo)
+        setTitulo(restaurante.titulo)
+        setCapa(restaurante.capa)
+
+        const pratosFormatados = restaurante.cardapio.map(
+          (item) =>
+            new Prato(
+              item.descricao,
+              item.foto,
+              [item.porcao],
+              'Adicionar ao carrinho',
+              item.nome,
+              item.id,
+              restaurante.avaliacao,
+              item.preco
+            )
         )
 
-        if (!marguerita) return
-
-        const pratoFormatado = new Prato(
-          marguerita.descricao,
-          marguerita.foto,
-          [marguerita.porcao],
-          'Adicionar ao carrinho',
-          marguerita.nome,
-          marguerita.id,
-          pizzaria.avaliacao,
-          marguerita.preco
-        )
-
-        setPratoApi(pratoFormatado)
+        setPratos(pratosFormatados)
       })
-  }, [])
+  }, [id])
 
   return (
     <>
-      <Header showTexto={false} variant={'categories'} />
-
-      <ProductsList
-        pratos={cardapio}
-        title=""
-        background="gray"
-        showInfos={false}
-        showEstrela={false}
+      <Header
+        showTexto={false}
         variant={'categories'}
-        onPratoClick={() => {
-          if (!pratoApi) return
-
-          setModal({
-            isVisible: true,
-            prato: pratoApi
-          })
-        }}
+        tipo={tipo}
+        titulo={titulo}
+        capa={capa}
       />
+
+      {pratos.length > 0 && (
+        <ProductsList
+          pratos={pratos}
+          title=""
+          background="gray"
+          showInfos={false}
+          showEstrela={false}
+          variant="categories"
+          onPratoClick={(prato) =>
+            setModal({
+              isVisible: true,
+              prato
+            })
+          }
+        />
+      )}
 
       <Modal className={modal.isVisible ? 'visivel' : ''}>
         <ModalContent className="container">
@@ -178,9 +117,15 @@ const Categories = () => {
             </header>
             <p>{modal.prato?.description}</p>
 
+            <p>
+              <strong>Porção:</strong> {modal.prato?.infos[0]}
+            </p>
+
             <button>
               {modal.prato?.button} - R${' '}
-              {modal.prato?.preco.toFixed(2).replace('.', ',') ?? '0,00'}
+              {modal.prato
+                ? modal.prato.preco.toFixed(2).replace('.', ',')
+                : '0,00'}
             </button>
           </div>
           <img
