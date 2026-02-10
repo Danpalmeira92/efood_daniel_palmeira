@@ -13,6 +13,16 @@ export type Props = {
   onPratoClick?: (prato: Prato) => void
 }
 
+export const formataPreco = (preco?: number | string) => {
+  const valor = Number(preco) || 0
+
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2
+  }).format(valor)
+}
+
 export const ProductsList = ({
   background,
   title,
@@ -35,6 +45,7 @@ export const ProductsList = ({
             infos={prato.infos}
             title={prato.title}
             button={prato.button}
+            preco={prato.preco}
             showInfos={showInfos}
             showEstrela={showEstrela}
             $variant={variant}

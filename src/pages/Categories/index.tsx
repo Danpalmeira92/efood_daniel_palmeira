@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { useParams } from 'react-router-dom'
 
+import { add, open } from '../../store/reducers/cart'
 import { ProductsList } from '../../components/ProductsList'
 import Prato from '../../models/Pratos'
 
@@ -35,6 +37,15 @@ interface ApiRestaurante {
 }
 
 const Categories = () => {
+  const dispatch = useDispatch()
+
+  const handleAddToCart = () => {
+    if (!modal.prato) return
+
+    dispatch(add(modal.prato))
+    dispatch(open())
+  }
+
   const { id } = useParams<{ id: string }>()
   const [pratos, setPratos] = useState<Prato[]>([])
   const [modal, setModal] = useState<ModalState>({
@@ -121,7 +132,7 @@ const Categories = () => {
               <strong>Porção:</strong> {modal.prato?.infos[0]}
             </p>
 
-            <button>
+            <button onClick={handleAddToCart}>
               {modal.prato?.button} - R${' '}
               {modal.prato
                 ? modal.prato.preco.toFixed(2).replace('.', ',')

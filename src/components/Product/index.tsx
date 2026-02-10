@@ -3,6 +3,8 @@ import { ButtonLink, ButtonLinkVariant } from '../Button/styles'
 
 import Tag from '../Tag'
 
+import { formataPreco } from '../ProductsList'
+
 import {
   Card,
   Descricao,
@@ -22,6 +24,7 @@ export type Props = {
   infos: string[]
   image: string
   avaliacao: number
+  preco: number
   button: string
   showInfos?: boolean
   showEstrela?: boolean
@@ -36,6 +39,7 @@ const Product = ({
   infos,
   image,
   avaliacao = 0,
+  preco,
   showInfos = true,
   showEstrela = true,
   $variant = 'default',
@@ -71,7 +75,7 @@ const Product = ({
             onClick?.()
           }}
         >
-          Adicionar ao carrinho
+          Mais detalhes
         </ButtonLinkVariant>
       ) : (
         <ButtonLink to={`/categories/${id}`}>Saiba mais</ButtonLink>

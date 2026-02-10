@@ -1,6 +1,35 @@
-import { ButtonLink, ButtonLinkVariant } from './styles'
+import { ButtonLink } from './styles'
+import { ButtonLinkVariant } from './styles'
 
-export const Button = () => <ButtonLink to="/categories">Saiba mais</ButtonLink>
-export const ButtonVariant = () => (
-  <ButtonLinkVariant to="">Mais detalhes</ButtonLinkVariant>
+type Props = {
+  title: string
+  to?: string
+  onClick?: () => void
+  type?: 'button' | 'submit'
+}
+
+const Button = ({ title, to, onClick, type = 'button' }: Props) => {
+  if (to) {
+    return <ButtonLink to={to}>{title}</ButtonLink>
+  }
+
+  return (
+    <button type={type} onClick={onClick}>
+      {title}
+    </button>
+  )
+}
+
+export const ButtonVariant = ({
+  title,
+  onClick
+}: {
+  title: string
+  onClick?: () => void
+}) => (
+  <ButtonLinkVariant to="" onClick={onClick}>
+    {title}
+  </ButtonLinkVariant>
 )
+
+export default Button

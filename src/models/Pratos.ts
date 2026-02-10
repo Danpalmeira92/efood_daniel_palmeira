@@ -1,4 +1,4 @@
-class Prato {
+export class Prato {
   id: number
   title: string
   description: string
