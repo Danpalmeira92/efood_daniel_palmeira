@@ -3,8 +3,6 @@ import { ButtonLink, ButtonLinkVariant } from '../Button/styles'
 
 import Tag from '../Tag'
 
-import { formataPreco } from '../ProductsList'
-
 import {
   Card,
   Descricao,
@@ -39,7 +37,6 @@ const Product = ({
   infos,
   image,
   avaliacao = 0,
-  preco,
   showInfos = true,
   showEstrela = true,
   $variant = 'default',
