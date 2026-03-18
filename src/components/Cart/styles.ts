@@ -106,3 +106,16 @@ export const CartItem = styled.li`
     right: 8px;
   }
 `
+export const Button = styled.button`
+  width: 100%;
+  border: 2px solid ${cores.salmon};
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  text-align: center;
+  color: ${cores.salmon};
+  background-color: ${cores.begeClaro};
+  font-size: 16px;
+  font-weight: bold;
+  display: inline-block;
+  cursor: pointer;
+`

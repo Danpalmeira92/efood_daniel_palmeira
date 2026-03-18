@@ -5,16 +5,36 @@ type Props = {
   title: string
   to?: string
   onClick?: () => void
-  type?: 'button' | 'submit'
+  type?: 'button' | 'link'
+  htmlType?: 'button' | 'submit' | 'reset'
+  children: string
+  disabled?: boolean
+  className?: string
 }
 
-const Button = ({ title, to, onClick, type = 'button' }: Props) => {
+const Button = ({
+  title,
+  to,
+  onClick,
+  htmlType = 'button',
+  disabled,
+  className
+}: Props) => {
   if (to) {
-    return <ButtonLink to={to}>{title}</ButtonLink>
+    return (
+      <ButtonLink to={to} className={className}>
+        {title}
+      </ButtonLink>
+    )
   }
 
   return (
-    <button type={type} onClick={onClick}>
+    <button
+      type={htmlType}
+      onClick={onClick}
+      disabled={disabled}
+      className={className}
+    >
       {title}
     </button>
   )

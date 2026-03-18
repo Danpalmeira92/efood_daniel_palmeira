@@ -1,11 +1,20 @@
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootReducer } from '../../store'
 
-import { Overlay, CardContainer, Sidebar, Prices, CartItem } from './styles'
+import {
+  Overlay,
+  CardContainer,
+  Sidebar,
+  Prices,
+  CartItem,
+  Button
+} from './styles'
 
 import { close, remove } from '../../store/reducers/cart'
 import { formataPreco } from '../ProductsList'
-import { ButtonLink } from '../Button/styles'
+
+import Checkout from '../../pages/Checkout'
 
 export const Cart = () => {
   const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
@@ -16,38 +25,47 @@ export const Cart = () => {
   }
 
   const getTotalPrice = () => {
-    return items.reduce((total, item) => total + item.preco, 0)
+    return items.reduce((total, item) => total + item.preco.current, 0)
   }
 
   const removeItem = (id: number) => {
     dispatch(remove(id))
   }
 
+  const [step, setStep] = useState<'cart' | 'checkout'>('cart')
+
   return (
     <CardContainer className={isOpen ? 'is-open' : ''}>
       <Overlay className={isOpen ? 'is-open' : ''} onClick={closeCart} />
 
       <Sidebar className={isOpen ? 'is-open' : ''}>
-        <ul>
-          {items.map((item) => (
-            <CartItem key={item.id}>
-              <img src={item.image} alt={item.title} />
+        {step === 'cart' && (
+          <>
+            <ul>
+              {items.map((item) => (
+                <CartItem key={item.id}>
+                  <img src={item.image} alt={item.title} />
 
-              <div>
-                <h3>{item.title}</h3>
-                <span>{formataPreco(item.preco)}</span>
-              </div>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <span>{formataPreco(item.preco.current)}</span>
+                  </div>
 
-              <button onClick={() => removeItem(item.id)} type="button" />
-            </CartItem>
-          ))}
-        </ul>
+                  <button onClick={() => removeItem(item.id)} type="button" />
+                </CartItem>
+              ))}
+            </ul>
 
-        <Prices>
-          Valor total <span>{formataPreco(getTotalPrice())}</span>
-        </Prices>
+            <Prices>
+              Valor total <span>{formataPreco(getTotalPrice())}</span>
+            </Prices>
 
-        <ButtonLink to="#">Continuar com a entrega</ButtonLink>
+            <Button onClick={() => setStep('checkout')}>
+              Continuar com a entrega
+            </Button>
+          </>
+        )}
+        {step === 'checkout' && <Checkout onBack={() => setStep('cart')} />}
       </Sidebar>
     </CardContainer>
   )

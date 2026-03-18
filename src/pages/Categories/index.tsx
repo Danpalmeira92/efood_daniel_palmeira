@@ -135,7 +135,7 @@ const Categories = () => {
             <button onClick={handleAddToCart}>
               {modal.prato?.button} - R${' '}
               {modal.prato
-                ? modal.prato.preco.toFixed(2).replace('.', ',')
+                ? modal.prato.preco.current.toFixed(2).replace('.', ',')
                 : '0,00'}
             </button>
           </div>

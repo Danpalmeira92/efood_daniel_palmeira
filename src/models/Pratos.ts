@@ -6,7 +6,7 @@ export class Prato {
   avaliacao: number
   infos: string[]
   button: string
-  preco: number
+  preco: { current: number }
 
   constructor(
     description: string,
@@ -25,7 +25,7 @@ export class Prato {
     this.title = title
     this.id = id
     this.avaliacao = avaliacao
-    this.preco = preco
+    this.preco = { current: preco }
   }
 }
 
