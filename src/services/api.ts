@@ -53,7 +53,7 @@ const api = createApi({
     }),
     purchase: builder.mutation<PurchaseResponse, PurchasePayload>({
       query: (body) => ({
-        url: 'checkout',
+        url: 'https://api-ebac.vercel.app/api/efood/checkout',
         method: 'POST',
         body
       })

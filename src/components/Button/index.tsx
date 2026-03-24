@@ -5,7 +5,7 @@ type Props = {
   title: string
   to?: string
   onClick?: () => void
-  type?: 'button' | 'link'
+  type?: 'button' | 'link' | 'submit'
   htmlType?: 'button' | 'submit' | 'reset'
   children: string
   disabled?: boolean

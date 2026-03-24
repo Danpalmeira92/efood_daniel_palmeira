@@ -2,14 +2,10 @@ import { useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import InputMask from 'react-input-mask'
 
-import Button from '../../components/Button'
 import Card from '../../components/Card'
-
-import barCode from '../../assets/images/boleto.png'
-import creditCard from '../../assets/images/cartao.png'
 
 import { usePurchaseMutation } from '../../services/api'
 
@@ -30,25 +26,28 @@ type Installment = {
 }
 
 const Checkout = ({ onBack }: Props) => {
-  const [payWithCard, setPayWithCard] = useState(false)
+  const [payWithCard, setPayWithCard] = useState(true)
   const [purchase, { data, isSuccess, isLoading }] = usePurchaseMutation()
   const { items } = useSelector((state: RootReducer) => state.cart)
   const [installments, setInstallments] = useState<Installment[]>([])
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const [step, setStep] = useState<'delivery' | 'payment'>('delivery')
+  const [step, setStep] = useState<'delivery' | 'payment' | 'success'>(
+    'delivery'
+  )
 
   const totalPrice = getTotalPrice(items)
 
   const form = useFormik({
     initialValues: {
       fullName: '',
-      email: '',
-      cpf: '',
-      deliveryEmail: '',
-      confirmDeliveryEmail: '',
+      endereco: '',
+      complemento: '',
+      cidade: '',
+      cep: '',
+      numero: '',
       cardOwner: '',
-      cpfCardOwner: '',
       cardDisplayName: '',
       cardNumber: '',
       expiresMonth: '',
@@ -60,78 +59,96 @@ const Checkout = ({ onBack }: Props) => {
       fullName: Yup.string()
         .min(5, 'O nome precisa ter pelo meno 5 caracteres')
         .required('O campo é obrigatório'),
-      email: Yup.string()
-        .email('E-mail inválido')
+      endereco: Yup.string()
+        .min(5, 'Endereço muito curto')
         .required('O campo é obrigatório'),
-      cpf: Yup.string().min(14).max(14).required('O campo é obrigatório'),
-      deliveryEmail: Yup.string()
-        .email('E-mail inválido')
-        .required('O campo é obrigatório'),
-      confirmDeliveryEmail: Yup.string()
-        .oneOf([Yup.ref('deliveryEmail')], 'Os e-mails são diferentes')
-        .required('O campo é obrigatório'),
+      complemento: Yup.string(),
+      cidade: Yup.string().required('O campo é obrigatório'),
+      cep: Yup.string().required('O campo é obrigatório'),
+      numero: Yup.string().required('O campo é obrigatório'),
 
-      cardOwner: Yup.string().when((values, schema) =>
-        payWithCard ? schema.required('O campo é obrigatório') : schema
-      ),
-      cpfCardOwner: Yup.string().when((values, schema) =>
-        payWithCard ? schema.required('O campo é obrigatório') : schema
-      ),
-      cardDisplayName: Yup.string().when((values, schema) =>
-        payWithCard ? schema.required('O campo é obrigatório') : schema
-      ),
-      cardNumber: Yup.string().when((values, schema) =>
-        payWithCard ? schema.required('O campo é obrigatório') : schema
-      ),
-      expiresMonth: Yup.string().when((values, schema) =>
-        payWithCard ? schema.required('O campo é obrigatório') : schema
-      ),
-      expiresYear: Yup.string().when((values, schema) =>
-        payWithCard ? schema.required('O campo é obrigatório') : schema
-      ),
-      cardCode: Yup.string().when((values, schema) =>
-        payWithCard ? schema.required('O campo é obrigatório') : schema
-      ),
-      installments: Yup.number().when(() =>
-        payWithCard
-          ? Yup.number().required('O campo é obrigatório')
-          : Yup.number()
-      )
+      cardOwner: Yup.string()
+        .min(3, 'Nome muito curto')
+        .required('O campo é obrigatório'),
+      cardNumber: Yup.string()
+        .test('card-number', 'Número do cartão inválido', (value) => {
+          if (!value) return false
+          const numbers = value.replace(/\D/g, '')
+          return numbers.length === 16
+        })
+        .required('O campo é obrigatório'),
+      expiresMonth: Yup.string()
+        .test('month', 'Mês inválido', (value) => {
+          if (!value) return false
+          const numbers = value.replace(/\D/g, '')
+          const month = Number(numbers)
+          return numbers.length === 2 && month >= 1 && month <= 12
+        })
+        .required('O campo é obrigatório'),
+      expiresYear: Yup.string()
+        .test('year', 'Ano inválido', (value) => {
+          if (!value) return false
+          const numbers = value.replace(/\D/g, '')
+          return numbers.length === 2
+        })
+        .required('O campo é obrigatório'),
+      cardCode: Yup.string()
+        .test('cvv', 'CVV inválido', (value) => {
+          if (!value) return false
+          const numbers = value.replace(/\D/g, '')
+          return numbers.length === 3
+        })
+        .required('O campo é obrigatório'),
+      installments: Yup.number().required('O campo é obrigatório')
     }),
-    onSubmit: (values) => {
-      purchase({
-        billing: {
-          document: values.cpf,
-          email: values.email,
-          name: values.fullName
-        },
-        delivery: {
-          email: values.deliveryEmail
-        },
-        payment: {
-          installments: values.installments,
-          card: {
-            active: payWithCard,
-            code: Number(values.cardCode),
-            name: values.cardDisplayName,
-            number: values.cardNumber,
-            owner: {
-              document: values.cpfCardOwner,
-              name: values.cardOwner
-            },
-            expires: {
-              month: Number(values.expiresMonth),
-              year: Number(values.expiresYear)
+    onSubmit: async (values) => {
+      const errors = await form.validateForm()
+
+      if (Object.keys(errors).length > 0) {
+        console.log('Tem erro, não envia')
+        return
+      }
+
+      console.log('Enviando certo agora')
+
+      try {
+        await purchase({
+          billing: {
+            name: values.fullName,
+            email: 'teste@test.com',
+            document: '00000000000'
+          },
+          delivery: {
+            email: 'teste@test.com'
+          },
+          payment: {
+            installments: values.installments,
+            card: {
+              active: true,
+              code: Number(values.cardCode),
+              name: values.cardDisplayName,
+              number: values.cardNumber,
+              owner: {
+                name: values.cardOwner,
+                document: '00000000000'
+              },
+              expires: {
+                month: Number(values.expiresMonth),
+                year: Number(values.expiresYear)
+              }
             }
-          }
-        },
-        products: items.map(
-          (item: { id: any; preco: { current: number } }) => ({
+          },
+          products: items.map((item: any) => ({
             id: item.id,
-            price: item.preco.current as number
-          })
-        )
-      })
+            price: item.preco.current
+          }))
+        }).unwrap()
+
+        dispatch(clear())
+        setStep('success')
+      } catch (error) {
+        console.log(error)
+      }
     }
   })
 
@@ -162,12 +179,6 @@ const Checkout = ({ onBack }: Props) => {
     }
   }, [totalPrice])
 
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(clear())
-    }
-  }, [isSuccess, dispatch])
-
   if (items.length === 0 && !isSuccess) {
     onBack()
     return null
@@ -175,18 +186,29 @@ const Checkout = ({ onBack }: Props) => {
 
   return (
     <div className="container">
-      {isSuccess && data ? (
-        <Card title="Muito obrigado">
-          <>
+      {step === 'success' ? (
+        <>
+          <Card title={`Pedido realizado - ${data?.orderId || 'Processando'}`}>
             <p>
-              É com satisfação que informamos que recebemos seu pedido com
-              sucesso! <br /> Abaixo estão os detalhes da sua compra: <br />
-              Número do pedido: {data.orderId} <br />
-              Forma de pagamento:{' '}
-              {payWithCard ? 'Cartão de crédito' : 'Boleto Bancário'}
+              Estamos felizes em informar que seu pedido já está em processo de
+              preparação e, em breve, será entregue no endereço fornecido.
+              <br /> <br />
+              Gostaríamos de ressaltar que nossos entregadores não estão
+              autorizados a realizar cobranças extras.
+              <br /> <br />
+              Lembre-se da importância de higienizar as mãos após o recebimento
+              do pedido, garantindo assim sua segurança e bem-estar durante a
+              refeição.
+              <br /> <br />
+              Esperamos que desfrute de uma deliciosa e agradável experiência
+              gastronômica. Bom apetite!
             </p>
-          </>
-        </Card>
+          </Card>
+
+          <S.CheckoutButton type="button" onClick={onBack} title="Concluir">
+            Concluir
+          </S.CheckoutButton>
+        </>
       ) : (
         <form onSubmit={form.handleSubmit}>
           {step === 'delivery' && (
@@ -207,72 +229,68 @@ const Checkout = ({ onBack }: Props) => {
                   </S.InputGroup>
 
                   <S.InputGroup>
-                    <label htmlFor="email">Endereço</label>
+                    <label htmlFor="endereco">Endereço</label>
                     <input
-                      id="email"
-                      type="email"
-                      name="email"
-                      value={form.values.email}
+                      id="endereco"
+                      type="text"
+                      name="endereco"
+                      value={form.values.endereco}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      className={checkInputHasError('email') ? 'error' : ''}
+                      className={checkInputHasError('endereco') ? 'error' : ''}
                     />
                   </S.InputGroup>
 
                   <S.InputGroup>
-                    <label htmlFor="cpf">Cidade</label>
-                    <InputMask
-                      id="cpf"
-                      name="cpf"
-                      value={form.values.cpf}
+                    <label htmlFor="cidade">Cidade</label>
+                    <input
+                      id="cidade"
+                      name="cidade"
+                      value={form.values.cidade}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      className={checkInputHasError('cpf') ? 'error' : ''}
-                      mask="999.999.999-99"
+                      className={checkInputHasError('cidade') ? 'error' : ''}
                     />
                   </S.InputGroup>
 
                   <S.Row marginTop="16px">
                     <S.InputGroup>
-                      <label htmlFor="deliveryEmail">CEP</label>
-                      <input
-                        id="deliveryEmail"
-                        name="deliveryEmail"
-                        value={form.values.deliveryEmail}
+                      <label htmlFor="cep">CEP</label>
+                      <InputMask
+                        id="cep"
+                        name="cep"
+                        value={form.values.cep}
                         onChange={form.handleChange}
                         onBlur={form.handleBlur}
-                        className={
-                          checkInputHasError('deliveryEmail') ? 'error' : ''
-                        }
+                        className={checkInputHasError('cep') ? 'error' : ''}
+                        mask="99999-999"
                       />
                     </S.InputGroup>
 
                     <S.InputGroup>
-                      <label htmlFor="confirmDeliveryEmail">Número</label>
+                      <label htmlFor="numero">Número</label>
                       <input
-                        id="confirmDeliveryEmail"
-                        name="confirmDeliveryEmail"
-                        value={form.values.confirmDeliveryEmail}
+                        id="numero"
+                        name="numero"
+                        value={form.values.numero}
                         onChange={form.handleChange}
                         onBlur={form.handleBlur}
-                        className={
-                          checkInputHasError('confirmDeliveryEmail')
-                            ? 'error'
-                            : ''
-                        }
+                        className={checkInputHasError('numero') ? 'error' : ''}
                       />
                     </S.InputGroup>
                   </S.Row>
                   <S.InputGroup>
-                    <label htmlFor="email">Complemento (Opcional)</label>
+                    <label htmlFor="complemento">Complemento (Opcional)</label>
                     <input
-                      id="email"
-                      type="email"
-                      name="email"
-                      value={form.values.email}
+                      id="complemento"
+                      type="text"
+                      name="complemento"
+                      value={form.values.complemento}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      className={checkInputHasError('email') ? 'error' : ''}
+                      className={
+                        checkInputHasError('complemento') ? 'error' : ''
+                      }
                     />
                   </S.InputGroup>
                 </>
@@ -280,7 +298,33 @@ const Checkout = ({ onBack }: Props) => {
 
               <S.CheckoutButton
                 type="button"
-                onClick={() => setStep('payment')}
+                onClick={async () => {
+                  const errors = await form.validateForm()
+
+                  const deliveryFields: (keyof typeof form.values)[] = [
+                    'fullName',
+                    'endereco',
+                    'cidade',
+                    'cep',
+                    'numero'
+                  ]
+
+                  const hasErrorsInDelivery = deliveryFields.some(
+                    (field) => errors[field]
+                  )
+
+                  if (!hasErrorsInDelivery) {
+                    setStep('payment')
+                  } else {
+                    form.setTouched({
+                      fullName: true,
+                      endereco: true,
+                      cidade: true,
+                      cep: true,
+                      numero: true
+                    })
+                  }
+                }}
                 title="Continuar com o pagamento"
               >
                 Continuar com o pagamento
@@ -329,12 +373,12 @@ const Checkout = ({ onBack }: Props) => {
                         mask="9999 9999 9999 9999"
                       />
                     </S.InputGroup>
-                    <S.InputGroup>
+                    <S.InputGroup maxWidth="80px">
                       <label htmlFor="cardCode">CVV</label>
                       <InputMask
-                        id="cardNumber"
-                        name="cardNumber"
-                        value={form.values.cardNumber}
+                        id="cardCode"
+                        name="cardCode"
+                        value={form.values.cardCode}
                         onChange={form.handleChange}
                         onBlur={form.handleBlur}
                         className={
@@ -344,24 +388,53 @@ const Checkout = ({ onBack }: Props) => {
                       />
                     </S.InputGroup>
                   </S.Row>
+                  <S.Row>
+                    <S.InputGroup>
+                      <label htmlFor="expiresMonth">Mês de vencimento</label>
+                      <InputMask
+                        id="expiresMonth"
+                        name="expiresMonth"
+                        value={form.values.expiresMonth}
+                        onChange={form.handleChange}
+                        onBlur={form.handleBlur}
+                        className={
+                          checkInputHasError('expiresMonth') ? 'error' : ''
+                        }
+                        mask="99"
+                      />
+                    </S.InputGroup>
+                    <S.InputGroup>
+                      <label htmlFor="expiresYear">Ano de vencimento</label>
+                      <InputMask
+                        id="expiresYear"
+                        name="expiresYear"
+                        value={form.values.expiresYear}
+                        onChange={form.handleChange}
+                        onBlur={form.handleBlur}
+                        className={
+                          checkInputHasError('expiresYear') ? 'error' : ''
+                        }
+                        mask="99"
+                      />
+                    </S.InputGroup>
+                  </S.Row>
                 </>
               </Card>
 
               <S.CheckoutButton
-                type="button"
-                onClick={() => setStep('delivery')}
-                title="Voltar"
-              >
-                Voltar
-              </S.CheckoutButton>
-
-              <S.CheckoutButton
-                type="button"
-                htmlType="submit"
-                disabled={isLoading}
-                title="Finalizar compra"
+                as="button"
+                type="submit"
+                disabled={false}
+                title="Finalizar pagamento"
               >
                 {isLoading ? 'Finalizando...' : 'Finalizar compra'}
+              </S.CheckoutButton>
+              <S.CheckoutButton
+                type="button"
+                onClick={() => setStep('delivery')}
+                title="Voltar para a edição de endereço"
+              >
+                Voltar
               </S.CheckoutButton>
             </>
           )}

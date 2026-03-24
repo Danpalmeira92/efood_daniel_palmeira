@@ -44,6 +44,8 @@ const Categories = () => {
 
     dispatch(add(modal.prato))
     dispatch(open())
+
+    closeModal()
   }
 
   const { id } = useParams<{ id: string }>()

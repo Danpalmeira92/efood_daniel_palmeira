@@ -65,7 +65,14 @@ export const Cart = () => {
             </Button>
           </>
         )}
-        {step === 'checkout' && <Checkout onBack={() => setStep('cart')} />}
+        {step === 'checkout' && (
+          <Checkout
+            onBack={() => {
+              setStep('cart')
+              closeCart()
+            }}
+          />
+        )}
       </Sidebar>
     </CardContainer>
   )
