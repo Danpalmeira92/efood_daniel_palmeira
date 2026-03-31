@@ -10,13 +10,7 @@ const Rotas = () => (
     <Route path="/categories/:id" element={<Categories />} />
     <Route
       path="/checkout"
-      element={
-        <Checkout
-          onBack={function (): void {
-            throw new Error('Function not implemented.')
-          }}
-        />
-      }
+      element={<Checkout onBack={() => null} onReturnToCart={() => null} />}
     />
   </Routes>
 )

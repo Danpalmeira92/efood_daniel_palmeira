@@ -71,6 +71,9 @@ export const Cart = () => {
               setStep('cart')
               closeCart()
             }}
+            onReturnToCart={() => {
+              setStep('cart')
+            }}
           />
         )}
       </Sidebar>

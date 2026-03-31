@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import InputMask from 'react-input-mask'
 
 import Card from '../../components/Card'
@@ -17,19 +17,13 @@ import { getTotalPrice, parseToBrl } from '../../utils'
 
 type Props = {
   onBack: () => void
+  onReturnToCart: () => void
 }
 
-type Installment = {
-  quantity: number
-  amount: number
-  formattedAmount: string
-}
-
-const Checkout = ({ onBack }: Props) => {
-  const [payWithCard, setPayWithCard] = useState(true)
+const Checkout = ({ onBack, onReturnToCart }: Props) => {
   const [purchase, { data, isSuccess, isLoading }] = usePurchaseMutation()
   const { items } = useSelector((state: RootReducer) => state.cart)
-  const [installments, setInstallments] = useState<Installment[]>([])
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -52,8 +46,7 @@ const Checkout = ({ onBack }: Props) => {
       cardNumber: '',
       expiresMonth: '',
       expiresYear: '',
-      cardCode: '',
-      installments: 1
+      cardCode: ''
     },
     validationSchema: Yup.object({
       fullName: Yup.string()
@@ -98,8 +91,7 @@ const Checkout = ({ onBack }: Props) => {
           const numbers = value.replace(/\D/g, '')
           return numbers.length === 3
         })
-        .required('O campo é obrigatório'),
-      installments: Yup.number().required('O campo é obrigatório')
+        .required('O campo é obrigatório')
     }),
     onSubmit: async (values) => {
       const errors = await form.validateForm()
@@ -122,7 +114,7 @@ const Checkout = ({ onBack }: Props) => {
             email: 'teste@test.com'
           },
           payment: {
-            installments: values.installments,
+            installments: 1,
             card: {
               active: true,
               code: Number(values.cardCode),
@@ -159,25 +151,6 @@ const Checkout = ({ onBack }: Props) => {
 
     return hasError
   }
-
-  useEffect(() => {
-    const calculateInstallments = () => {
-      const installmentsArray: Installment[] = []
-      for (let i = 1; i <= 6; i++) {
-        installmentsArray.push({
-          quantity: i,
-          amount: totalPrice / i,
-          formattedAmount: parseToBrl(totalPrice / i)
-        })
-      }
-
-      return installmentsArray
-    }
-
-    if (totalPrice > 0) {
-      setInstallments(calculateInstallments())
-    }
-  }, [totalPrice])
 
   if (items.length === 0 && !isSuccess) {
     onBack()
@@ -332,7 +305,7 @@ const Checkout = ({ onBack }: Props) => {
 
               <S.CheckoutButton
                 type="button"
-                onClick={onBack}
+                onClick={onReturnToCart}
                 title="Voltar para o carrinho"
               >
                 Voltar para o carrinho
