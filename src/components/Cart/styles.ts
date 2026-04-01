@@ -44,6 +44,10 @@ export const Sidebar = styled.aside`
     background-color: ${colors.lightBeige};
     color: ${colors.salmon};
   }
+
+  p {
+    color: ${colors.lightBeige};
+  }
 `
 
 export const Prices = styled.p`
@@ -100,6 +104,7 @@ export const CartItem = styled.li`
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
 
     position: absolute;
     bottom: 8px;

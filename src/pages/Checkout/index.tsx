@@ -2,7 +2,7 @@ import { useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+
 import InputMask from 'react-input-mask'
 
 import Card from '../../components/Card'
@@ -25,7 +25,6 @@ const Checkout = ({ onBack, onReturnToCart }: Props) => {
   const { items } = useSelector((state: RootReducer) => state.cart)
 
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const [step, setStep] = useState<'delivery' | 'payment' | 'success'>(
     'delivery'
@@ -130,10 +129,12 @@ const Checkout = ({ onBack, onReturnToCart }: Props) => {
               }
             }
           },
-          products: items.map((item: any) => ({
-            id: item.id,
-            price: item.preco.current
-          }))
+          products: items.map(
+            (item: { id: number; preco: { current: number } }) => ({
+              id: item.id,
+              price: item.preco.current
+            })
+          )
         }).unwrap()
 
         dispatch(clear())

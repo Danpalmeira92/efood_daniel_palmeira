@@ -60,9 +60,16 @@ export const Cart = () => {
               Valor total <span>{formataPreco(getTotalPrice())}</span>
             </Prices>
 
-            <Button onClick={() => setStep('checkout')}>
-              Continuar com a entrega
-            </Button>
+            {items.length > 0 ? (
+              <Button onClick={() => setStep('checkout')}>
+                Continuar com a entrega
+              </Button>
+            ) : (
+              <p>
+                Seu carrinho está vazio. Adicione pelo menos um item para
+                continuar.
+              </p>
+            )}
           </>
         )}
         {step === 'checkout' && (
