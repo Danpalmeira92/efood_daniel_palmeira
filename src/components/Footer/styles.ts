@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 
 export const Container = styled.footer`
-  background-color: ${cores.begeClaro};
+  background-color: ${colors.lightBeige};
   padding: 32px 0;
   font-size: 14px;
   height: 298px;

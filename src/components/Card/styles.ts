@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 
 export const Container = styled.div`
   border-radius: 8px;
-  color: ${cores.begeClaro};
+  color: ${colors.lightBeige};
   padding: 8px;
   margin-bottom: 40px;
 
@@ -11,7 +11,7 @@ export const Container = styled.div`
   h3 {
     font-size: 18px;
     font-weight: bold;
-    color: ${cores.begeClaro};
+    color: ${colors.lightBeige};
     margin-bottom: 24px;
   }
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { breakpoints, cores } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 import Button from '../../components/Button'
 
 type InputGroupProps = {
@@ -39,8 +39,8 @@ export const InputGroup = styled.div<InputGroupProps>`
 
   input,
   select {
-    background-color: ${cores.begeClaro};
-    border: 1px solid ${cores.begeClaro};
+    background-color: ${colors.lightBeige};
+    border: 1px solid ${colors.lightBeige};
     height: 32px;
     padding: 0 8px;
     width: 100%;
@@ -59,8 +59,9 @@ export const TabButton = styled.button<TabButtonProps>`
   border-radius: 8px;
   font-size: 14px;
   font-weight: bold;
-  color: ${cores.begeClaro};
-  background-color: ${(props) => (props.isActive ? cores.verde : cores.preto)};
+  color: ${colors.lightBeige};
+  background-color: ${(props) =>
+    props.isActive ? colors.green : colors.black};
   height: 32px;
   border: none;
   margin-right: 16px;
@@ -78,12 +79,12 @@ export const TabButton = styled.button<TabButtonProps>`
 `
 export const CheckoutButton = styled(Button)`
   width: 100%;
-  border: 2px solid ${cores.salmon};
+  border: 2px solid ${colors.salmon};
   padding: 6px 10px;
   margin-bottom: 4px;
   text-align: center;
-  color: ${cores.salmon};
-  background-color: ${cores.begeClaro};
+  color: ${colors.salmon};
+  background-color: ${colors.lightBeige};
   font-size: 16px;
   font-weight: bold;
   display: block;

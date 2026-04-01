@@ -42,7 +42,9 @@ const Header = ({
       <HeaderBar $variant={variant}>
         {variant === 'categories' ? (
           <VariantHeaderTexto>
-            <h4>Restaurantes</h4>
+            <Link to="/">
+              <h4>Restaurantes</h4>
+            </Link>
 
             <Link to="/" className="logo">
               <img src={logo} alt="Efood" />

@@ -1,14 +1,14 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 
 export const ButtonLink = styled(Link)`
   width: 105px;
-  border: 2px solid ${cores.salmon};
-  background-color: ${cores.salmon};
+  border: 2px solid ${colors.salmon};
+  background-color: ${colors.salmon};
   padding: 6px 10px;
   margin-bottom: 4px;
-  color: ${cores.cinza};
+  color: ${colors.grey};
   font-size: 16px;
   font-weight: bold;
   display: inline-block;
@@ -16,12 +16,12 @@ export const ButtonLink = styled(Link)`
 `
 export const ButtonLinkVariant = styled(Link)`
   width: 100%;
-  border: 2px solid ${cores.salmon};
+  border: 2px solid ${colors.salmon};
   padding: 6px 10px;
   margin-bottom: 4px;
   text-align: center;
-  color: ${cores.salmon};
-  background-color: ${cores.begeClaro};
+  color: ${colors.salmon};
+  background-color: ${colors.lightBeige};
   font-size: 16px;
   font-weight: bold;
   display: inline-block;

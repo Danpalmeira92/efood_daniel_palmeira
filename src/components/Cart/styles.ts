@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 import { TagContainer } from '../Tag/styles'
 import { ButtonLink } from '../Button/styles'
 
@@ -31,7 +31,7 @@ export const CardContainer = styled.div`
 `
 
 export const Sidebar = styled.aside`
-  background-color: ${cores.salmon};
+  background-color: ${colors.salmon};
   z-index: 1;
   padding: 24px 8px 0 8px;
   max-width: 360px;
@@ -41,15 +41,15 @@ export const Sidebar = styled.aside`
     max-width: 100%;
     width: 100%;
     text-align: center;
-    background-color: ${cores.begeClaro};
-    color: ${cores.salmon};
+    background-color: ${colors.lightBeige};
+    color: ${colors.salmon};
   }
 `
 
 export const Prices = styled.p`
   font-weight: bold;
   font-size: 14px;
-  color: ${cores.begeClaro};
+  color: ${colors.lightBeige};
   margin-bottom: 24px;
   margin-top: 32px;
   display: flex;
@@ -62,7 +62,7 @@ export const CartItem = styled.li`
   margin-bottom: 16px;
   padding: 8px;
   position: relative;
-  background-color: ${cores.begeClaro};
+  background-color: ${colors.lightBeige};
 
   img {
     height: 80px;
@@ -72,7 +72,7 @@ export const CartItem = styled.li`
   }
 
   h3 {
-    color: ${cores.salmon};
+    color: ${colors.salmon};
     font-weight: bold;
     font-size: 16px;
   }
@@ -82,7 +82,7 @@ export const CartItem = styled.li`
     padding-top: 16px;
     font-weight: bold;
     font-size: 14px;
-    color: ${cores.salmon};
+    color: ${colors.salmon};
   }
 
   ${TagContainer} {
@@ -108,12 +108,12 @@ export const CartItem = styled.li`
 `
 export const Button = styled.button`
   width: 100%;
-  border: 2px solid ${cores.salmon};
+  border: 2px solid ${colors.salmon};
   padding: 6px 10px;
   margin-bottom: 4px;
   text-align: center;
-  color: ${cores.salmon};
-  background-color: ${cores.begeClaro};
+  color: ${colors.salmon};
+  background-color: ${colors.lightBeige};
   font-size: 16px;
   font-weight: bold;
   display: inline-block;

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 import { TagContainer } from '../Tag/styles'
 import { Props } from './index'
 
@@ -8,7 +8,7 @@ export const Card = styled.div<{ $variant?: Props['$variant'] }>`
   flex-direction: column;
   height: 100%;
 
-  background-color: ${cores.cinza};
+  background-color: ${colors.grey};
   padding: ${(props) =>
     props.$variant === 'categories' ? '8px 8px 8px 8px' : '200px 8px 8px 8px'};
   position: relative;
@@ -52,7 +52,7 @@ export const Titulo = styled.h3<{ $variant?: Props['$variant'] }>`
   ${(props) =>
     props.$variant === 'categories' &&
     `
-      color: ${cores.begeClaro};
+      color: ${colors.lightBeige};
       margin-top: 2px;
       margin-bottom: 2px;
       `}
@@ -73,7 +73,7 @@ export const Descricao = styled.p<{ $variant?: Props['$variant'] }>`
     props.$variant === 'categories' &&
     `
       margin-top: 0;
-      color: ${cores.begeClaro};
+      color: ${colors.lightBeige};
 
       display: -webkit-box;
       -webkit-line-clamp: 4;

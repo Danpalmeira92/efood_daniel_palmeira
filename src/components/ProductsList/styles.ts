@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import { Props } from '.'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 import { Card } from '../Product/styles'
 
 type ContainerProps = {
@@ -12,10 +12,10 @@ type ContainerProps = {
 export const Container = styled.section<ContainerProps>`
   padding: 32px 0;
   background-color: ${(props) =>
-    props.$background === 'black' ? cores.preto : cores.cinza};
+    props.$background === 'black' ? colors.black : colors.grey};
 
   ${Card} {
-    background-color: ${cores.cinza};
+    background-color: ${colors.grey};
     border: 1px solid;
   }
 
@@ -23,9 +23,9 @@ export const Container = styled.section<ContainerProps>`
     props.$variant === 'categories' &&
     `
       ${Card} {
-        background-color: ${cores.salmon};
+        background-color: ${colors.salmon};
         border: 1px solid;
-        color: ${cores.cinza};
+        color: ${colors.grey};
       }
     `}
 `
@@ -87,8 +87,8 @@ export const ModalContent = styled.div`
   min-height: 344px;
   padding: 32px;
 
-  background-color: ${cores.salmon};
-  color: ${cores.cinza};
+  background-color: ${colors.salmon};
+  color: ${colors.grey};
 
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -133,8 +133,8 @@ export const ModalContent = styled.div`
     border: none;
     padding: 0;
 
-    background-color: ${cores.begeClaro};
-    color: ${cores.salmon};
+    background-color: ${colors.lightBeige};
+    color: ${colors.salmon};
 
     font-size: 14px;
     font-weight: bold;

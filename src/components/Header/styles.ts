@@ -65,6 +65,11 @@ export const VariantHeaderTexto = styled.div`
   gap: 720px;
   padding: 24px;
 
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
   h4 {
     font-size: 18px;
     font-weight: bold;
