@@ -110,7 +110,7 @@ const Categories = () => {
           title=""
           background="gray"
           showInfos={false}
-          showEstrela={false}
+          showStar={false}
           variant="categories"
           onPratoClick={(prato) =>
             setModal({

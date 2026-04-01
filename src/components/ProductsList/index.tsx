@@ -8,7 +8,7 @@ export type Props = {
   background: 'gray' | 'black'
   pratos: Prato[]
   showInfos?: boolean
-  showEstrela?: boolean
+  showStar?: boolean
   variant?: 'default' | 'categories'
   onPratoClick?: (prato: Prato) => void
 }
@@ -28,7 +28,7 @@ export const ProductsList = ({
   title,
   pratos,
   showInfos = true,
-  showEstrela = true,
+  showStar = true,
   variant = 'default',
   onPratoClick
 }: Props) => (
@@ -47,7 +47,7 @@ export const ProductsList = ({
             button={prato.button}
             preco={prato.preco.current}
             showInfos={showInfos}
-            showEstrela={showEstrela}
+            showStar={showStar}
             $variant={variant}
             avaliacao={prato.avaliacao}
             onClick={() => onPratoClick?.(prato)}

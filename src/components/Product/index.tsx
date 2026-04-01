@@ -1,4 +1,4 @@
-import { Estrela } from '../Avaliacao/styles'
+import { Star } from '../Avaliacao/styles'
 import { ButtonLink, ButtonLinkVariant } from '../Button/styles'
 
 import Tag from '../Tag'
@@ -13,7 +13,7 @@ import {
   WrapperProduto
 } from './styles'
 
-import estrela from '../../assets/images/estrela.png'
+import star from '../../assets/images/star.png'
 
 export type Props = {
   id: number
@@ -25,7 +25,7 @@ export type Props = {
   preco: number
   button: string
   showInfos?: boolean
-  showEstrela?: boolean
+  showStar?: boolean
   $variant?: 'default' | 'categories'
   onClick?: () => void
 }
@@ -38,7 +38,7 @@ const Product = ({
   image,
   avaliacao = 0,
   showInfos = true,
-  showEstrela = true,
+  showStar = true,
   $variant = 'default',
   onClick
 }: Props) => (
@@ -55,10 +55,10 @@ const Product = ({
       <LinhaTitulo $variant={$variant}>
         <Titulo $variant={$variant}>{title}</Titulo>
 
-        {showEstrela && (
-          <Estrela>
-            {avaliacao} <img src={estrela} alt="estrela" />
-          </Estrela>
+        {showStar && (
+          <Star>
+            {avaliacao} <img src={star} alt="star" />
+          </Star>
         )}
       </LinhaTitulo>
 

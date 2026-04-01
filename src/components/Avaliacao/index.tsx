@@ -1,5 +1,5 @@
-import { Estrela } from './styles'
+import { Star } from './styles'
 
-const Avaliacao = () => <Estrela />
+const Avaliacao = () => <Star />
 
 export default Avaliacao
